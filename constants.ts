@@ -1,5 +1,5 @@
 
-import { Commodity, View, Stock } from './types';
+import { View } from './types';
 
 export const NORMS = {
   PRIMARY: {
@@ -22,9 +22,9 @@ export const NORMS = {
   },
 };
 
-export const COMMODITIES: Commodity[] = ['rice', 'dhal', 'oil', 'salt', 'gram', 'chickpea', 'egg'];
+export const COMMODITIES = ['rice', 'dhal', 'oil', 'salt', 'gram', 'chickpea', 'egg'];
 
-export const COMMODITY_NAMES: Record<Commodity, { name: string, unit: string }> = {
+export const COMMODITY_NAMES = {
   rice: { name: 'அரிசி', unit: 'கி.கி' },
   dhal: { name: 'பருப்பு', unit: 'கி.கி' },
   oil: { name: 'எண்ணெய்', unit: 'லிட்டர்' },
@@ -34,7 +34,7 @@ export const COMMODITY_NAMES: Record<Commodity, { name: string, unit: string }> 
   egg: { name: 'முட்டை', unit: 'எண்ணிக்கை' },
 };
 
-export const VIEWS: Record<View, string> = {
+export const VIEWS = {
   [View.MONTH_SELECTION]: 'மாத தேர்வு',
   [View.DAILY_ENTRY]: 'தினசரி பதிவு',
   [View.STOCK_REGISTER]: 'உணவுப் பொருள் இருப்புப் பதிவேடு',

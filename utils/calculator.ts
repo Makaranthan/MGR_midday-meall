@@ -1,12 +1,11 @@
 
-import { DailyRecord, Stock } from '../types';
 import { NORMS } from '../constants';
 
-const roundTo3 = (num: number): number => {
+const roundTo3 = (num) => {
   return Math.round(num * 1000) / 1000;
 };
 
-export const getInitialStock = (): Stock => ({
+export const getInitialStock = () => ({
   rice: 0,
   dhal: 0,
   oil: 0,
@@ -17,14 +16,14 @@ export const getInitialStock = (): Stock => ({
 });
 
 export const calculateDailyConsumption = (
-  primaryStudents: number,
-  upperPrimaryStudents: number,
-  dayOfWeek: number,
-  eggsIssued: boolean,
-  dhalIssued: boolean,
-  chickpeasIssued: boolean,
-  gramIssued: boolean
-): Stock => {
+  primaryStudents,
+  upperPrimaryStudents,
+  dayOfWeek,
+  eggsIssued,
+  dhalIssued,
+  chickpeasIssued,
+  gramIssued
+) => {
   const consumption = getInitialStock();
 
   // Rice
@@ -60,14 +59,14 @@ export const calculateDailyConsumption = (
 };
 
 export const calculateMonthlyData = (
-    month: number, // 0-indexed
-    year: number,
-    initialOpeningBalance: Stock,
-    existingData: DailyRecord[]
-): DailyRecord[] => {
+    month, // 0-indexed
+    year,
+    initialOpeningBalance,
+    existingData
+) => {
 
     const daysInMonth = new Date(year, month + 1, 0).getDate();
-    const newData: DailyRecord[] = [];
+    const newData = [];
     let previousDayClosingBalance = { ...initialOpeningBalance };
 
     for (let day = 1; day <= daysInMonth; day++) {
@@ -103,7 +102,7 @@ export const calculateMonthlyData = (
 
         const closingBalance = getInitialStock();
         Object.keys(closingBalance).forEach(key => {
-            const commodity = key as keyof Stock;
+            const commodity = key;
             const totalReceived = stockReceived.primary[commodity] + stockReceived.upperPrimary[commodity];
             closingBalance[commodity] = roundTo3(openingBalance[commodity] + totalReceived - consumption[commodity]);
         });

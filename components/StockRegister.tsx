@@ -1,40 +1,25 @@
 
 import React from 'react';
-import { DailyRecord, Commodity } from '../types';
 import { COMMODITY_NAMES, COMMODITIES, DAYS_TAMIL } from '../constants';
 
-interface StockRegisterProps {
-  monthlyData: DailyRecord[];
-}
-
-const formatNumber = (num: number, isEgg: boolean) => {
+const formatNumber = (num, isEgg) => {
     if (isEgg) {
         return num.toFixed(0);
     }
     return num.toFixed(3);
 }
 
-const parseDate = (dateString: string) => {
+const parseDate = (dateString) => {
     const parts = dateString.split('-');
     return new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
 };
 
 
-const StockRegister: React.FC<StockRegisterProps> = ({ monthlyData }) => {
-  const handlePrint = () => {
-    window.print();
-  };
-
+const StockRegister = ({ monthlyData }) => {
   return (
     <div>
         <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-bold text-gray-800">உணவுப் பொருள் இருப்புப் பதிவேடு</h2>
-            <button
-                onClick={handlePrint}
-                className="no-print bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
-            >
-                அச்சிடுக / PDF
-            </button>
       </div>
       <div className="overflow-x-auto">
         {COMMODITIES.map(commodity => (

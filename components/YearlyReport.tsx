@@ -1,28 +1,17 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { Stock, DailyRecord, Commodity } from '../types';
 import { COMMODITY_NAMES, COMMODITIES, MONTHS_TAMIL } from '../constants';
 import { getInitialStock } from '../utils/calculator';
 
-interface MonthlyReportData {
-  month: number;
-  monthName: string;
-  consumption: Stock;
-  stockReceived: Stock;
-  totalPrimaryStudents: number;
-  totalUpperPrimaryStudents: number;
-  hasData: boolean;
-}
-
-const YearlyReport: React.FC<{ initialYear: number }> = ({ initialYear }) => {
+const YearlyReport = ({ initialYear }) => {
   const [year, setYear] = useState(initialYear);
-  const [reportData, setReportData] = useState<MonthlyReportData[]>([]);
+  const [reportData, setReportData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadYearlyData = () => {
       setLoading(true);
-      const allMonthsData: MonthlyReportData[] = [];
+      const allMonthsData = [];
       // Financial year runs from April (3) to March (2)
       const financialYearMonths = [3, 4, 5, 6, 7, 8, 9, 10, 11, 0, 1, 2];
 
@@ -31,7 +20,7 @@ const YearlyReport: React.FC<{ initialYear: number }> = ({ initialYear }) => {
         const dataYear = month >= 3 ? year : year + 1;
         const lsKey = `stock-register-${dataYear}-${month}`;
         
-        const monthData: MonthlyReportData = {
+        const monthData = {
           month,
           monthName: MONTHS_TAMIL[month],
           consumption: getInitialStock(),
@@ -44,7 +33,7 @@ const YearlyReport: React.FC<{ initialYear: number }> = ({ initialYear }) => {
         try {
           const savedData = localStorage.getItem(lsKey);
           if (savedData) {
-            const parsedData: { monthlyData: DailyRecord[] } = JSON.parse(savedData);
+            const parsedData = JSON.parse(savedData);
             if (parsedData.monthlyData) {
               monthData.hasData = true;
               parsedData.monthlyData.forEach(day => {
@@ -95,33 +84,21 @@ const YearlyReport: React.FC<{ initialYear: number }> = ({ initialYear }) => {
     return totals;
   }, [reportData]);
   
-  const handlePrint = () => {
-    window.print();
-  };
-  
   return (
     <div>
         <div className="flex flex-col md:flex-row justify-between items-center mb-6 no-print">
             <h2 className="text-2xl font-bold text-gray-800">{year} - {year + 1} - ஆண்டு அறிக்கை</h2>
-            <div className="flex items-center gap-4 mt-4 md:mt-0">
-                 <div className="flex items-center gap-2">
-                    <label htmlFor="year-selector" className="font-semibold">நிதி ஆண்டின் தொடக்கம்:</label>
-                    <input
-                        type="number"
-                        id="year-selector"
-                        value={year}
-                        onChange={e => setYear(parseInt(e.target.value))}
-                        className="w-24 p-2 border rounded-md"
-                        min="2020"
-                        max="2030"
-                    />
-                 </div>
-                <button
-                    onClick={handlePrint}
-                    className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
-                >
-                    அச்சிடுக / PDF
-                </button>
+            <div className="flex items-center gap-2 mt-4 md:mt-0">
+                <label htmlFor="year-selector" className="font-semibold">நிதி ஆண்டின் தொடக்கம்:</label>
+                <input
+                    type="number"
+                    id="year-selector"
+                    value={year}
+                    onChange={e => setYear(parseInt(e.target.value))}
+                    className="w-24 p-2 border rounded-md"
+                    min="2020"
+                    max="2030"
+                />
             </div>
       </div>
 

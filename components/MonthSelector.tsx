@@ -1,21 +1,16 @@
 
 import React, { useState } from 'react';
-import { Stock, Commodity } from '../types';
 import { MONTHS_TAMIL, COMMODITY_NAMES, COMMODITIES, VIEWS } from '../constants';
 import { getInitialStock } from '../utils/calculator';
 
-interface MonthSelectorProps {
-  onMonthSelect: (month: number, year: number, openingBalances: Stock) => void;
-}
-
-const MonthSelector: React.FC<MonthSelectorProps> = ({ onMonthSelect }) => {
+const MonthSelector = ({ onMonthSelect }) => {
   const currentYear = new Date().getFullYear();
   const [year, setYear] = useState(currentYear);
   const [month, setMonth] = useState(new Date().getMonth());
-  const [primaryOpeningBalances, setPrimaryOpeningBalances] = useState<Stock>(getInitialStock());
-  const [upperPrimaryOpeningBalances, setUpperPrimaryOpeningBalances] = useState<Stock>(getInitialStock());
+  const [primaryOpeningBalances, setPrimaryOpeningBalances] = useState(getInitialStock());
+  const [upperPrimaryOpeningBalances, setUpperPrimaryOpeningBalances] = useState(getInitialStock());
 
-  const handleBalanceChange = (category: 'primary' | 'upperPrimary', commodity: Commodity, value: string) => {
+  const handleBalanceChange = (category, commodity, value) => {
     const numericValue = parseFloat(value) || 0;
     if (category === 'primary') {
         setPrimaryOpeningBalances(prev => ({ ...prev, [commodity]: numericValue }));
@@ -24,7 +19,7 @@ const MonthSelector: React.FC<MonthSelectorProps> = ({ onMonthSelect }) => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     const totalOpeningBalances = getInitialStock();
     COMMODITIES.forEach(commodity => {

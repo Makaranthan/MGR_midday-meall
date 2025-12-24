@@ -1,14 +1,9 @@
 
 import React, { useMemo } from 'react';
-import { DailyRecord, Stock, Commodity } from '../types';
 import { COMMODITY_NAMES, COMMODITIES } from '../constants';
 import { getInitialStock } from '../utils/calculator';
 
-interface MonthlySummaryProps {
-  monthlyData: DailyRecord[];
-}
-
-const MonthlySummary: React.FC<MonthlySummaryProps> = ({ monthlyData }) => {
+const MonthlySummary = ({ monthlyData }) => {
   const totals = useMemo(() => {
     const consumptionTotal = getInitialStock();
     const receivedTotal = getInitialStock();
@@ -28,20 +23,10 @@ const MonthlySummary: React.FC<MonthlySummaryProps> = ({ monthlyData }) => {
   const openingBalance = monthlyData.length > 0 ? monthlyData[0].openingBalance : getInitialStock();
   const closingBalance = monthlyData.length > 0 ? monthlyData[monthlyData.length - 1].closingBalance : getInitialStock();
   
-  const handlePrint = () => {
-    window.print();
-  };
-
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-bold text-gray-800">மாதாந்திர சுருக்கம்</h2>
-            <button
-                onClick={handlePrint}
-                className="no-print bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
-            >
-                அச்சிடுக / PDF
-            </button>
       </div>
 
       <div className="overflow-x-auto printable-table">

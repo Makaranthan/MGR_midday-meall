@@ -1,19 +1,13 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { DailyRecord, Stock, Commodity } from '../types';
 import { COMMODITY_NAMES, COMMODITIES, DAYS_TAMIL } from '../constants';
 import { getInitialStock } from '../utils/calculator';
 
-interface DailyEntryProps {
-  monthlyData: DailyRecord[];
-  updateDailyRecord: (date: string, primaryStudents: number, upperPrimaryStudents: number, stockReceived: { primary: Stock; upperPrimary: Stock; }, eggsIssued: boolean, dhalIssued: boolean, chickpeasIssued: boolean, gramIssued: boolean) => void;
-}
-
-const DailyEntry: React.FC<DailyEntryProps> = ({ monthlyData, updateDailyRecord }) => {
-  const [selectedDay, setSelectedDay] = useState<DailyRecord | null>(null);
+const DailyEntry = ({ monthlyData, updateDailyRecord }) => {
+  const [selectedDay, setSelectedDay] = useState(null);
   const [primaryStudents, setPrimaryStudents] = useState(0);
   const [upperPrimaryStudents, setUpperPrimaryStudents] = useState(0);
-  const [stockReceived, setStockReceived] = useState<{ primary: Stock, upperPrimary: Stock }>({ primary: getInitialStock(), upperPrimary: getInitialStock() });
+  const [stockReceived, setStockReceived] = useState({ primary: getInitialStock(), upperPrimary: getInitialStock() });
   const [eggsIssued, setEggsIssued] = useState(true);
   const [dhalIssued, setDhalIssued] = useState(true);
   const [chickpeasIssued, setChickpeasIssued] = useState(false);
@@ -55,7 +49,7 @@ const DailyEntry: React.FC<DailyEntryProps> = ({ monthlyData, updateDailyRecord 
     }
   };
 
-  const handleStockChange = useCallback((category: 'primary' | 'upperPrimary', commodity: Commodity, value: string) => {
+  const handleStockChange = useCallback((category, commodity, value) => {
     const numericValue = parseFloat(value) || 0;
     setStockReceived(prev => ({
         ...prev,
@@ -66,7 +60,7 @@ const DailyEntry: React.FC<DailyEntryProps> = ({ monthlyData, updateDailyRecord 
     }));
   }, []);
 
-  const parseDate = (dateString: string) => {
+  const parseDate = (dateString) => {
     const parts = dateString.split('-');
     // new Date(year, monthIndex, day)
     return new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));

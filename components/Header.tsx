@@ -1,7 +1,7 @@
 
 import React from 'react';
 
-const Header: React.FC = () => (
+const Header = () => (
   <header className="bg-white shadow-md no-print">
     <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 text-center">
         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Seal_of_Tamil_Nadu.svg/1200px-Seal_of_Tamil_Nadu.svg.png" alt="TamilNadu Logo" className="h-16 w-auto mx-auto mb-2"/>

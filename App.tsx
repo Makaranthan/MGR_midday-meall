@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { DailyRecord, Stock, View } from './types';
-import { COMMODITY_NAMES, VIEWS } from './constants';
+import { View } from './types';
+import { VIEWS } from './constants';
 import { calculateMonthlyData, getInitialStock } from './utils/calculator';
 import MonthSelector from './components/MonthSelector';
 import DailyEntry from './components/DailyEntry';
@@ -10,11 +10,11 @@ import MonthlySummary from './components/MonthlySummary';
 import YearlyReport from './components/YearlyReport';
 import Header from './components/Header';
 
-const App: React.FC = () => {
-  const [currentView, setCurrentView] = useState<View>(View.MONTH_SELECTION);
-  const [selectedDate, setSelectedDate] = useState<{ month: number; year: number } | null>(null);
-  const [monthlyData, setMonthlyData] = useState<DailyRecord[]>([]);
-  const [openingBalances, setOpeningBalances] = useState<Stock>(getInitialStock());
+const App = () => {
+  const [currentView, setCurrentView] = useState(View.MONTH_SELECTION);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [monthlyData, setMonthlyData] = useState([]);
+  const [openingBalances, setOpeningBalances] = useState(getInitialStock());
   
   const lsKey = selectedDate ? `stock-register-${selectedDate.year}-${selectedDate.month}` : null;
 
@@ -35,7 +35,7 @@ const App: React.FC = () => {
     }
   }, [lsKey]);
 
-  const saveData = (data: DailyRecord[], balances: Stock) => {
+  const saveData = (data, balances) => {
     if (lsKey) {
       try {
         const dataToSave = { monthlyData: data, openingBalances: balances };
@@ -46,7 +46,7 @@ const App: React.FC = () => {
     }
   };
 
-  const handleMonthSelect = (month: number, year: number, balances: Stock) => {
+  const handleMonthSelect = (month, year, balances) => {
     setSelectedDate({ month, year });
     setOpeningBalances(balances);
     const initialData = calculateMonthlyData(month, year, balances, []);
@@ -55,11 +55,11 @@ const App: React.FC = () => {
     setCurrentView(View.DAILY_ENTRY);
   };
 
-  const updateDailyRecord = (date: string, primaryStudents: number, upperPrimaryStudents: number, stockReceived: { primary: Stock; upperPrimary: Stock; }, eggsIssued: boolean, dhalIssued: boolean, chickpeasIssued: boolean, gramIssued: boolean) => {
+  const updateDailyRecord = (date, primaryStudents, upperPrimaryStudents, stockReceived, eggsIssued, dhalIssued, chickpeasIssued, gramIssued) => {
     const updatedData = monthlyData.map(d => 
       d.date === date ? { ...d, primaryStudents, upperPrimaryStudents, stockReceived, eggsIssued, dhalIssued, chickpeasIssued, gramIssued } : d
     );
-    const recalculatedData = calculateMonthlyData(selectedDate!.month, selectedDate!.year, openingBalances, updatedData);
+    const recalculatedData = calculateMonthlyData(selectedDate.month, selectedDate.year, openingBalances, updatedData);
     setMonthlyData(recalculatedData);
     saveData(recalculatedData, openingBalances);
   };
@@ -73,6 +73,8 @@ const App: React.FC = () => {
     setMonthlyData([]);
     setOpeningBalances(getInitialStock());
   };
+
+  const isPrintable = [View.STOCK_REGISTER, View.MONTHLY_SUMMARY, View.YEARLY_SUMMARY].includes(currentView);
 
   const renderView = () => {
     switch (currentView) {
@@ -100,12 +102,25 @@ const App: React.FC = () => {
                  <h2 className="text-xl md:text-2xl font-bold text-blue-700">
                     {new Date(selectedDate.year, selectedDate.month).toLocaleString('ta-IN', { month: 'long', year: 'numeric' })}
                 </h2>
-                <button
-                    onClick={handleReset}
-                    className="mt-2 sm:mt-0 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md transition duration-300"
-                >
-                    புதிய மாதம்/ஆண்டு தேர்வு செய்ய
-                </button>
+                <div className="flex items-center gap-4 mt-2 sm:mt-0">
+                  {isPrintable && (
+                    <button
+                        onClick={() => window.print()}
+                        className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-md transition duration-300 flex items-center gap-2"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v6a2 2 0 002 2h12a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm-8 6a1 1 0 011-1h6a1 1 0 110 2H6a1 1 0 01-1-1z" clipRule="evenodd" />
+                        </svg>
+                        <span>அச்சிடுக / PDF</span>
+                    </button>
+                  )}
+                  <button
+                      onClick={handleReset}
+                      className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md transition duration-300"
+                  >
+                      புதிய மாதம்/ஆண்டு தேர்வு செய்ய
+                  </button>
+                </div>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               {Object.values(View).map(view => {
